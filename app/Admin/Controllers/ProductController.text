@@ -1,0 +1,97 @@
+<?php
+
+namespace App\Admin\Controllers;
+
+use App\Models\Branding;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Size;
+use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Form;
+use Encore\Admin\Grid;
+use Encore\Admin\Show;
+
+class ProductController extends AdminController
+{
+    /**
+     * Title for current resource.
+     *
+     * @var string
+     */
+    protected $title = 'Product';
+
+    /**
+     * Make a grid builder.
+     *
+     * @return Grid
+     */
+    protected function grid()
+    {
+        $grid = new Grid(new Product());
+
+        $grid->column('id', __('Id'));
+        $grid->column('name', __('Name'));
+        $grid->column('category_id', __('Category '));
+        $grid->column('branding_id', __('Branding '));
+        $grid->column('size_id', __('Size '));
+        $grid->column('price', __('Price'));
+        $grid->column('sale', __('Sale'));
+        $grid->column('content', __('Content'));
+        $grid->column('images', __('Images'));
+        // $grid->column('images_detail', __('Images_detail'));
+        $grid->column('created_at', __('Created at'));
+        $grid->column('updated_at', __('Updated at'));
+
+        return $grid;
+    }
+
+    /**
+     * Make a show builder.
+     *
+     * @param mixed $id
+     * @return Show
+     */
+    protected function detail($id)
+    {
+        $show = new Show(Product::findOrFail($id));
+
+        $show->field('id', __('Id'));
+        $show->field('name', __('Name'));
+        $show->field('category_id', __('Category '));
+        $show->field('branding_id', __('Branding '));
+        $show->field('size_id', __('Size '));
+        $show->field('price', __('Price'));
+        $show->field('sale', __('Sale'));
+        $show->field('content', __('Content'));
+        $show->field('images', __('Images'));
+        $show->field('created_at', __('Created at'));
+        $show->field('updated_at', __('Updated at'));
+
+        return $show;
+    }
+
+    /**
+     * Make a form builder.
+     *
+     * @return Form
+     */
+    protected function form()
+    {
+        $form = new Form(new Product());
+
+        $form->text('name', __('Name'));
+        
+        $form->select('category_id', __('Category '))->options(Category::all()->pluck('name','name'));
+        $form->select('branding_id', __('Branding '))->options(Branding::all()->pluck('name','name'));
+        $form->checkbox('size_id', __('Size'))->options(Size::all()->pluck('name','name'))->canCheckAll();
+        $form->number('price', __('Price'))->placeholder('$');
+        $form->number('sale', __('Sale'))->placeholder('%');
+        $form->summernote('content', __('Content'));
+        $form->image('images', __('Images'));
+        $form->multipleImage('pictures')->sortable();
+
+        return $form;
+    }
+
+    
+}
